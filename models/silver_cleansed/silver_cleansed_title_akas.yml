@@ -1,0 +1,52 @@
+
+version: 2
+
+models:
+  - name: silver_cleansed_title_akas
+    description: "A regional title alias"
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - titleId
+            - ordering
+    columns:
+      - name: titleId
+        description: "an alphanumeric identifier of the title"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('silver_cleansed_title_basics')
+              field: tconst
+      - name: ordering
+        description: "a number to uniquely identify rows for a given titleId"
+        data_tests:
+          - not_null
+      - name: title
+        description: "the localized title"
+        data_tests:
+          - not_null
+      - name: region
+        description: "the region for this version of the title"
+        data_tests:
+          - relationships:
+              to: ref('region_codes')
+              field: alpha2
+      - name: language
+        description: "the language of the title"
+        data_tests:
+          - relationships:
+              to: ref('language_codes')
+              field: alpha2
+      - name: types
+        description: 'Enumerated set of attributes for this alternative title. New values may be added in the future without warning'
+        data_tests:
+          - not_null
+          - array_column_exists_in_table:
+              model2: ref('distribution_types')
+              array_column2: distribution_type
+      - name: attributes
+        data_tests:
+          - not_null
+        description: "Additional terms to describe this alternative title, not enumerated"
+      - name: isOriginalTitle
+        description: "if this title is original, or not or unknown"

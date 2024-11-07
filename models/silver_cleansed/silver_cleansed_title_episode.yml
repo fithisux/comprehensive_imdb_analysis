@@ -1,0 +1,30 @@
+
+version: 2
+
+models:
+  - name: silver_cleansed_title_episode
+    description: "The episode data"
+    data_tests:
+      - both_null_or_not_null:
+          column_name: seasonNumber
+          column_name2: episodeNumber
+    columns:
+      - name: tconst
+        description: "alphanumeric identifier of episode"
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('silver_cleansed_title_basics')
+              field: tconst
+      - name: parentTconst
+        description: "alphanumeric identifier of the parent TV Series"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('silver_cleansed_title_basics')
+              field: tconst
+      - name: seasonNumber
+        description: "season number the episode belongs to"
+      - name: episodeNumber
+        description: "episode number of the tconst in the TV series"

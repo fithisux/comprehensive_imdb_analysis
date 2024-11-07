@@ -1,0 +1,87 @@
+
+version: 2
+
+models:
+  - name: gold_business_title
+    description: "The characteristics of the title"
+    data_tests:
+      - both_null_or_not_null:
+          column_name: seasonNumber
+          column_name2: episodeNumber
+      - dbt_utils.expression_is_true:
+            expression: "len(genres) < 4"
+      - both_null_or_not_null:
+          column_name: numVotes
+          column_name2: averageRating
+      - both_null_or_not_null:
+          column_name: writers
+          column_name2: directors
+    columns:
+      - name: tconst
+        description: "alphanumeric unique identifier of the title"
+        data_tests:
+          - unique
+          - not_null
+          - col_is_alphanumeric
+      - name: titleType
+        description: "the type/format of the title (e.g. movie, short, tvseries, tvepisode, video, etc)"
+        data_tests:
+          - not_null
+      - name: primaryTitle
+        description: "the more popular title / the title used by the filmmakers on promotional materials at the point of release"
+        data_tests:
+          - not_null
+      - name: originalTitle
+        description: "original title, in the original language"
+        data_tests:
+          - not_null
+      - name: isAdult
+        description: "adult film"
+        data_tests:
+          - not_null
+      - name: startYear
+        description: "represents the release year of a title. In the case of TV Series, it is the series start year"
+      - name: endYear
+        description: "TV Series end year. null for all other title types"
+      - name: runtimeMinutes
+        description: "primary runtime of the title, in minutes"
+      - name: genres
+        description: "includes up to three genres associated with the title"
+        data_tests:
+          - not_null
+      - name: directors
+        description: "director(s) of the given title"
+        data_tests:
+          - array_column_exists_in_table:
+              model2: ref('silver_cleansed_name_basics')
+              array_column2: nconst
+      - name: writers
+        description: "writer(s) of the given title"
+        data_tests:
+          - array_column_exists_in_table:
+              model2: ref('silver_cleansed_name_basics')
+              array_column2: nconst
+      - name: averageRating
+        description: "weighted average of all the individual user ratings"
+      - name: numVotes
+        description: "number of votes the title has received"
+      - name: parentTconst
+        description: "alphanumeric identifier of the parent TV Series"
+        data_tests:
+          - relationships:
+              to: ref('gold_business_title')
+              field: tconst
+      - name: seasonNumber
+        description: "season number the episode belongs to"
+        data_tests:
+        - dbt_utils.expression_is_true:
+            expression: "is null"
+            config:
+              where: "parentTconst is null"
+      - name: episodeNumber
+        description: "episode number of the tconst in the TV series"
+        data_tests:
+          - dbt_utils.expression_is_true:
+              expression: "is null"
+              config:
+                where: "parentTconst is null"

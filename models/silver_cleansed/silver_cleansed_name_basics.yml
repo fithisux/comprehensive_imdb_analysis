@@ -1,0 +1,57 @@
+
+version: 2
+
+models:
+  - name: silver_cleansed_name_basics
+    description: "The details for contributors"
+    data_tests:
+      - dbt_utils.expression_is_true:
+          expression: "len(primaryProfession) < 4"
+    columns:
+      - name: nconst
+        description: "alphanumeric unique identifier of the name/person"
+        data_tests:
+          - unique
+          - not_null
+          - col_is_alphanumeric
+      - name: primaryName
+        description: "name by which the person is most often credited"
+        data_tests:
+          - not_null
+      - name: birthYear
+        description: "in YYYY format"
+      - name: deathYear
+        description: "in YYYY format if applicable"
+      - name: primaryProfession
+        description: "the top-3 professions of the person"
+        data_tests:
+          - not_null
+      - name: knownForTitles
+        description: "titles the person is known for"
+        data_tests:
+          - not_null
+          - array_column_exists_in_table:
+              model2: ref('silver_cleansed_title_basics')
+              array_column2: tconst
+unit_tests:
+  - name: test_is_valid_known_for_title_cleansing
+    description: "Blah"
+    model: silver_cleansed_name_basics
+    given:
+      - input: ref('silver_casted_name_basics')
+        rows:
+          - {nconst: AA, knownForTitles: [1, 2 ,3], primaryName: AP, birthYear: null, deathYear: null, primaryProfession: [blah1]}
+          - {nconst: BB, knownForTitles: [], primaryName: BP, birthYear: null, deathYear: null, primaryProfession: [blah2]}
+          - {nconst: CC, knownForTitles: [5, 6, 3], primaryName: CP, birthYear: null, deathYear: null, primaryProfession: [blah3]}
+          - {nconst: DD, knownForTitles: [7, 8], primaryName: DP, birthYear: null, deathYear: null, primaryProfession: [blah4]}
+      - input: ref('silver_cleansed_title_basics')
+        rows:
+          - {tconst: 1}
+          - {tconst: 2}
+          - {tconst: 3}
+    expect:
+      rows:
+          - {nconst: AA, knownForTitles: [1, 2 ,3], primaryName: AP, birthYear: null, deathYear: null, primaryProfession: [blah1]}
+          - {nconst: BB, knownForTitles: [], primaryName: BP, birthYear: null, deathYear: null, primaryProfession: [blah2]}
+          - {nconst: CC, knownForTitles: [3], primaryName: CP, birthYear: null, deathYear: null, primaryProfession: [blah3]}
+          - {nconst: DD, knownForTitles: [], primaryName: DP, birthYear: null, deathYear: null, primaryProfession: [blah4]}

@@ -1,0 +1,8 @@
+database_files/dev*
+dbt_packages/*
+logs/*
+target/*
+.user.yml
+**/.DS_Store
+.ipynb_checkpoints/*
+venv/*

@@ -1,0 +1,23 @@
+
+version: 2
+
+models:
+  - name: silver_cleansed_title_ratings
+    description: "The ratings of a title"
+    columns:
+      - name: tconst
+        description: "alphanumeric unique identifier of the title"
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('silver_cleansed_title_basics')
+              field: tconst
+      - name: averageRating
+        description: "weighted average of all the individual user ratings"
+        data_tests:
+          - not_null
+      - name: numVotes
+        description: "number of votes the title has received"
+        data_tests:
+          - not_null
