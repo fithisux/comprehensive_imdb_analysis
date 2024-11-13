@@ -1,3 +1,4 @@
 {{ config(materialized='table') }}
 
-select * from {{ref('silver_cleansed_title_akas')}}
+select titleId as tconst, ordering, title, region, language, types, attributes, isOriginalTitle
+from {{ref('silver_cleansed_title_akas')}}

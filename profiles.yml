@@ -1,7 +1,8 @@
-imdb_dataset_article:
+comprehensive_omdb:
   target: dev
   outputs:
     dev:
       type: duckdb
       path: 'database_files/dev.duckdb'
       schema: imdb
+      threads: 1

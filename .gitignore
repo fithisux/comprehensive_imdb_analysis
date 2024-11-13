@@ -6,3 +6,5 @@ target/*
 **/.DS_Store
 .ipynb_checkpoints/*
 venv/*
+kuzudb_elt/*
+export_elt/*.json

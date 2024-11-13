@@ -1,1 +1,1 @@
-It keeps here the duck db database files. Point you DBEaver to the dev.duckdb in this folder.
+It keeps here the duck db database files. Point you DBeaver to the dev.duckdb in this folder.

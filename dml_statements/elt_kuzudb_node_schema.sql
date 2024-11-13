@@ -1,0 +1,4 @@
+CREATE NODE TABLE IMDB_BUSINESS_CAST(cast_id STRING, description STRUCT(category STRING, characters STRING)[], job STRING, PRIMARY KEY (cast_id));
+CREATE NODE TABLE IMDB_BUSINESS_NAME(nconst STRING, primaryName STRING, birthYear INT64, deathYear INT64, primaryProfession STRING[], PRIMARY KEY (nconst));
+CREATE NODE TABLE IMDB_BUSINESS_TITLE(tconst STRING, titleType STRING, primaryTitle STRING, originalTitle STRING, isAdult BOOLEAN, startYear INT64, endYear INT64, runtimeMinutes INT64, genres STRING[], averageRating FLOAT, numVotes INT64, seasonNumber INT64, episodeNumber INT64, PRIMARY KEY (tconst));
+CREATE NODE TABLE IMDB_BUSINESS_TITLE_ALIAS(alias_id STRING, title STRING, region STRING, language STRING,  types STRING[], attributes STRING[], isOriginalTitle BOOLEAN, PRIMARY KEY (alias_id));
